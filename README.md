@@ -1,5 +1,5 @@
 # slog
-An svn log output beautifier.
+## An svn log output beautifier.
 
 Beautifies basic svn log output, like this:
 ```bash
@@ -22,3 +22,30 @@ Default format - one line, truncated with ellipsis to terminal window size
 Full commit message format
 
 ![Image](/pics/slog_full.png)
+
+## How to use
+You pipe the output of `svn log --xml` into slog. Note the `--xml` option; it depends on that.
+
+### Basic usage
+`svn log --xml | slog`
+
+I create and export a bash function that takes the number of commits I want to see, like so:
+```bash
+SLOG() {
+  if [ "$#" -ne 1 ]; then
+    echo "usage: SLOG <num commits>"
+  else
+    if which slog > /dev/null 2>&1; then
+      svn log -l${1} --xml | slog
+    else
+      echo "Can't find slog"
+    fi
+  fi
+}
+
+export -f SLOG
+```
+Then I can just do this:
+```bash
+SLOG 15
+```
